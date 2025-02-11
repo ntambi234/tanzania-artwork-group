@@ -1,0 +1,612 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Handicrafts TZ</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.css">
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      background-color: #f9f9f9;
+      margin: 0;
+      padding: 0;
+    }
+    header {
+      background: #2c3e50;
+      padding: 10px 20px;
+      color: white;
+      text-align: center;
+    }
+    nav {
+      text-align: center;
+      background: #3498db;
+      padding: 10px;
+    }
+    nav a {
+      color: white;
+      margin: 0 15px;
+      text-decoration: none;
+    }
+    .carousel {
+      max-width: 100%;
+      margin: 20px auto;
+      overflow: hidden;
+    }
+    #form-section {
+      margin: 30px;
+      padding: 20px;
+      background: #ffffff;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+    .form-group {
+      margin: 15px 0;
+    }
+    label {
+      display: block;
+      margin-bottom: 5px;
+    }
+    input[type="text"], input[type="email"], input[type="password"], select {
+      width: 100%;
+      padding: 10px;
+      margin: 5px 0;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+    }
+    .error {
+      color: red;
+      font-size: 0.9em;
+    }
+    button {
+      background-color: #27ae60;
+      color: white;
+      padding: 10px 15px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Handicrafts TZ</h1>
+    <p>Explore the beauty of Tanzanian handicrafts</p>
+  </header>
+  
+  <nav>
+    <a href="#">Home</a>
+    <a href="#products">Products</a>
+    <a href="#artists">Artists</a>
+    <a href="#blog">Blog</a>
+    <a href="#contact">Contact Us</a>
+  </nav>
+
+  <section id="form-section">
+    <h2>User Registration Form</h2>
+    <form id="registration-form">
+      <div class="form-group">
+        <label for="full-name">Full Name</label>
+        <input type="text" id="full-name" name="full-name" required>
+        <span class="error" id="name-error"></span>
+      </div>
+
+      <div class="form-group">
+        <label for="reg-number">Registration Number (Format: BCS-00-0000-0000)</label>
+        <input type="text" id="reg-number" name="reg-number" required>
+        <span class="error" id="reg-error"></span>
+      </div>
+
+      <div class="form-group">
+        <label for="sex">Sex</label>
+        <select id="sex" name="sex">
+          <option value="">Select...</option>
+          <option value="Male">Male</option>
+          <option value="Female">Female</option>
+          <option value="Other">Other</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="email">Email</label>
+        <input type="email" id="email" name="email" required>
+        <span class="error" id="email-error"></span>
+      </div>
+
+      <div class="form-group">
+        <label for="region">Region</label>
+        <select id="region" name="region">
+          <option value="">Select...</option>
+          <option value="Dar es Salaam">Dar es Salaam</option>
+          <option value="Arusha">Arusha</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="district">District</label>
+        <select id="district" name="district">
+          <option value="">Select a region first...</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="password">Password</label>
+        <input type="password" id="password" name="password" required>
+        <span class="error" id="password-error"></span>
+      </div>
+
+      <div class="form-group">
+        <label for="confirm-password">Confirm Password</label>
+        <input type="password" id="confirm-password" name="confirm-password" required>
+      </div>
+
+      <button type="submit">Register</button>
+    </form>
+  </section>
+
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+  <script>
+    $(document).ready(function () {
+      // Dynamic district loading
+      $('#region').on('change', function () {
+        const region = $(this).val();
+        const districtOptions = {
+          'Dar es Salaam': ['Ilala', 'Temeke', 'Kinondoni'],
+          'Arusha': ['Arumeru', 'Karatu', 'Monduli']
+        };
+        $('#district').empty().append('<option value="">Select...</option>');
+        if (districtOptions[region]) {
+          districtOptions[region].forEach(function (district) {
+            $('#district').append(`<option value="${district}">${district}</option>`);
+          });
+        }
+      });
+
+      // Form validation
+      $('#registration-form').on('submit', function (e) {
+        e.preventDefault();
+        let valid = true;
+
+        // Name validation
+        const name = $('#full-name').val();
+        if (!/^[a-zA-Z\s]+$/.test(name)) {
+          valid = false;
+          $('#name-error').text('Please enter a valid full name.');
+        } else {
+          $('#name-error').text('');
+        }
+
+        // Registration number validation
+        const regNumber = $('#reg-number').val();
+        if (!/^BCS-\d{2}-\d{4}-\d{4}$/.test(regNumber)) {
+          valid = false;
+          $('#reg-error').text('Registration number must follow the format BCS-00-0000-0000.');
+        } else {
+          $('#reg-error').text('');
+        }
+
+        // Email validation
+        const email = $('#email').val();
+        if (!/^[\w.%+-]+@[\w.-]+\.[a-zA-Z]{2,}$/.test(email)) {
+          valid = false;
+          $('#email-error').text('Please enter a valid email address.');
+        } else {
+          $('#email-error').text('');
+        }
+
+        // Password validation
+        const password = $('#password').val();
+        const confirmPassword = $('#confirm-password').val();
+        if (password.length < 8 || !/[!@#$%^&*]/.test(password)) {
+          valid = false;
+          $('#password-error').text('Password must be at least 8 characters long and contain a special character.');
+        } else {
+          $('#password-error').text('');
+        }
+
+        if (password !== confirmPassword) {
+          valid = false;
+          alert('Passwords do not match.');
+        }
+
+        if (valid) {
+          alert('Registration successful!');
+          this.submit();
+        }
+      });
+    });
+  </script>
+</body>
+</html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tanzania Traditional Artwork</title>
+    <link rel="stylesheet" href="styles.css"> <!-- Link to your CSS file -->
+    <style>
+        /* Basic styles */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+        header {
+            background-color: #333;
+            color: white;
+            padding: 10px 0;
+        }
+        header nav ul {
+            list-style-type: none;
+            text-align: center;
+        }
+        header nav ul li {
+            display: inline;
+            margin: 0 15px;
+        }
+        header nav ul li a {
+            color: white;
+            text-decoration: none;
+            font-size: 18px;
+        }
+        .content {
+            padding: 20px;
+            display: none;
+        }
+        .active {
+            display: block;
+        }
+        footer {
+            background-color: #333;
+            color: white;
+            text-align: center;
+            padding: 10px;
+            position: fixed;
+            width: 100%;
+            bottom: 0;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <nav>
+            <ul>
+                <li><a href="javascript:void(0);" onclick="showSection('home')">Home</a></li>
+                <li><a href="javascript:void(0);" onclick="showSection('products')">Products</a></li>
+                <li><a href="javascript:void(0);" onclick="showSection('artists')">Artists</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <div id="home" class="content active">
+        <h1>Welcome to Tanzania Traditional Artwork</h1>
+        <p>Your go-to place for unique and authentic Tanzanian art pieces.</p>
+    </div>
+
+    <div id="products" class="content">
+        <h1>Our Products</h1>
+        <p>Explore a variety of traditional Tanzanian artworks available for purchase.</p>
+        <!-- Add your product listings here -->
+    </div>
+
+    <div id="artists" class="content">
+        <h1>Meet the Artists</h1>
+        <p>Learn about the talented artists who create the stunning traditional artworks from Tanzania.</p>
+        <!-- List or display information about the artists here -->
+    </div>
+
+    <footer>
+        <p>&copy; 2025 Tanzania Traditional Artwork. All Rights Reserved.</p>
+    </footer>
+
+    <script>
+        // JavaScript function to switch sections
+        function showSection(sectionId) {
+            // Hide all sections
+            var sections = document.querySelectorAll('.content');
+            sections.forEach(function(section) {
+                section.classList.remove('active');
+            });
+
+            // Show the selected section
+            var activeSection = document.getElementById(sectionId);
+            activeSection.classList.add('active');
+        }
+    </script>
+
+</body>
+</html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Products - Tanzania Traditional Artwork</title>
+    <style>
+        /* Basic Styling */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+
+        header {
+            background-color: #333;
+            color: white;
+            padding: 10px 0;
+        }
+
+        header nav ul {
+            list-style-type: none;
+            text-align: center;
+        }
+
+        header nav ul li {
+            display: inline;
+            margin: 0 15px;
+        }
+
+        header nav ul li a {
+            color: white;
+            text-decoration: none;
+            font-size: 18px;
+        }
+
+        main {
+            padding: 20px;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-around;
+        }
+
+        .product {
+            background-color: white;
+            border-radius: 8px;
+            width: 250px;
+            margin: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        .product img {
+            width: 100%;
+            height: auto;
+            border-bottom: 2px solid #ddd;
+        }
+
+        .product-info {
+            padding: 15px;
+        }
+
+        .product h3 {
+            margin-top: 0;
+            font-size: 22px;
+            color: #333;
+        }
+
+        .product p {
+            color: #555;
+            margin: 5px 0;
+        }
+
+        .product .artist {
+            font-weight: bold;
+            color: #007BFF;
+        }
+
+        .product .location {
+            font-size: 14px;
+            color: #888;
+            margin-top: 10px;
+        }
+
+        footer {
+            background-color: #333;
+            color: white;
+            text-align: center;
+            padding: 10px;
+            position: fixed;
+            width: 100%;
+            bottom: 0;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <nav>
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="products.html">Products</a></li>
+                <li><a href="artists.html">Artists</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <!-- Product 1 -->
+        <div class="product">
+            <img src="product1.jpg" alt="Traditional Artwork 1">
+            <div class="product-info">
+                <h3>Wooden Carving</h3>
+                <p><span class="artist">Artist: John Mwangaza</span></p>
+                <p>Hand-carved from Tanzanian hardwood, this piece represents the vibrant culture of the Masai tribe.</p>
+                <p><strong>Price: $200</strong></p>
+                <p class="location">Available at: <em>Market Square, Dar es Salaam</em></p>
+            </div>
+        </div>
+
+        <!-- Product 2 -->
+        <div class="product">
+            <img src="product2.jpg" alt="Traditional Artwork 2">
+            <div class="product-info">
+                <h3>Beaded Necklace</h3>
+                <p><span class="artist">Artist: Amina Nguvumali</span></p>
+                <p>This colorful necklace is crafted using beads and threads, showcasing the creativity of Tanzanian artisans.</p>
+                <p><strong>Price: $50</strong></p>
+                <p class="location">Available at: <em>Artisan Market, Zanzibar</em></p>
+            </div>
+        </div>
+
+        <!-- Product 3 -->
+        <div class="product">
+            <img src="product3.jpg" alt="Traditional Artwork 3">
+            <div class="product-info">
+                <h3>Painted Drum</h3>
+                <p><span class="artist">Artist: Abdul Nassar</span></p>
+                <p>Decorated with traditional African motifs, this drum is a symbol of unity and celebration.</p>
+                <p><strong>Price: $150</strong></p>
+                <p class="location">Available at: <em>Old Town Gallery, Arusha</em></p>
+            </div>
+        </div>
+
+    </main>
+
+    <footer>
+        <p>&copy; 2025 Tanzania Traditional Artwork. All Rights Reserved.</p>
+    </footer>
+
+</body>
+</html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Artists - Tanzania Traditional Artwork</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <nav>
+            <ul>
+                <li><a href="artist.html">Home</a></li>
+                <li><a href="products.html">Products</a></li>
+                <li><a href="artists.html">Artists</a></li>
+            </ul>
+        </nav>
+    </header>
+    
+    <main>
+        <section>
+            <h1>Meet the Artists</h1>
+            <p>Learn about the talented artists who create the stunning traditional artworks from Tanzania.</p>
+            <!-- You can list or display information about the artists here -->
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2025 Tanzania Traditional Artwork. All Rights Reserved.</p>
+    </footer>
+</body>
+</html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tanzania Traditional Artwork</title>
+    <link rel="stylesheet" href="styles.css"> <!-- Link to your CSS file -->
+</head>
+<body>
+    <header>
+        <nav>
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="products.html">Products</a></li>
+                <li><a href="artists.html">Artists</a></li>
+            </ul>
+        </nav>
+    </header>
+    
+    <main>
+        <section>
+            <h1>Welcome to Tanzania Traditional Artwork</h1>
+            <p>Your go-to place for unique and authentic Tanzanian art pieces.</p>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2025 Tanzania Traditional Artwork. All Rights Reserved.</p>
+    </footer>
+</body>
+</html>
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f4;
+}
+
+header {
+    background-color: #333;
+    color: white;
+    padding: 10px 0;
+}
+
+header nav ul {
+    list-style-type: none;
+    text-align: center;
+}
+
+header nav ul li {
+    display: inline;
+    margin: 0 15px;
+}
+
+header nav ul li a {
+    color: white;
+    text-decoration: none;
+    font-size: 18px;
+}
+
+main {
+    padding: 20px;
+    text-align: center;
+}
+
+footer {
+    background-color: #333;
+    color: white;
+    text-align: center;
+    padding: 10px;
+    position: fixed;
+    width: 100%;
+    bottom: 0;
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tanzania Handicrafts</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: orange;
+            color: black;
+            text-align: center;
+            padding: 20px;
+        }
+        img {
+            border: 5px solid green;
+            border-radius: 10px;
+            max-width: 100%;
+            height: auto;
+        }
+    </style>
+</head>
+<body>
+    <h1>Explore Tanzanian Traditional Products</h1>
+    <img src="images/traditional_artwork.jpg" alt="Traditional Tanzanian Handicraft">
+    <p>Beautiful handcrafted products representing Tanzania's rich cultural heritage.</p>
+</body>
+</html>
+
+
+
